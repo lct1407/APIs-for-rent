@@ -11,17 +11,21 @@ This directory contains skills, commands, and agent presets for the RentAPI proj
 │   ├── database-migration.md
 │   ├── deployment.md
 │   ├── frontend-testing.md
-│   └── security-audit.md
+│   ├── security-audit.md
+│   └── ui-ux-design.md
 ├── commands/            # Slash commands for quick tasks
 │   ├── api-docs.md
 │   ├── code-review.md
 │   ├── deploy-check.md
+│   ├── design-tokens.md
 │   ├── dev-start.md
+│   ├── generate-component.md
 │   ├── migrate.md
 │   ├── quick-fix.md
 │   ├── security-check.md
 │   ├── test-backend.md
-│   └── test-frontend.md
+│   ├── test-frontend.md
+│   └── ui-review.md
 └── README.md           # This file
 ```
 
@@ -118,6 +122,28 @@ Perform comprehensive security audits on the rental API platform.
 Can you perform a security audit on the authentication system?
 ```
 
+#### 6. **ui-ux-design**
+Create beautiful, creative, and user-friendly interfaces with modern design principles.
+
+**When to use**: Designing new components, improving UI aesthetics, ensuring accessibility, creating delightful user experiences
+
+**Key features**:
+- Modern UI patterns (glassmorphism, neumorphism, gradients)
+- Advanced component patterns (hero sections, pricing cards, dashboards)
+- Typography & hierarchy best practices
+- Accessibility (a11y) compliance
+- Responsive design strategies
+- Dark mode excellence
+- Beautiful form design
+- Micro-interactions & animations
+- Design system tokens
+
+**Example usage**:
+```
+Can you help me create a beautiful pricing card with gradient accents?
+Can you use the ui-ux-design skill to redesign our dashboard with modern UI trends?
+```
+
 ## ⚡ Slash Commands
 
 Slash commands are quick shortcuts for common development tasks. They're faster than skills and provide immediate results.
@@ -135,6 +161,9 @@ Slash commands are quick shortcuts for common development tasks. They're faster 
 | `/api-docs` | Generate/update API docs | Documentation updates |
 | `/code-review` | Review recent changes | Pre-commit review |
 | `/quick-fix` | Troubleshoot common issues | When things break |
+| `/ui-review` | Review UI for design quality | Design audits |
+| `/generate-component` | Generate beautiful React components | Component creation |
+| `/design-tokens` | Review/update design system tokens | Design system |
 
 ### How to Use Commands
 
@@ -291,6 +320,7 @@ Claude will recommend the appropriate skills and commands based on your needs.
 |------|-------|----------|
 | **Backend API** | api-testing | test-backend |
 | **Frontend** | frontend-testing | test-frontend |
+| **UI/UX Design** | ui-ux-design | ui-review, generate-component, design-tokens |
 | **Database** | database-migration | migrate |
 | **Security** | security-audit | security-check |
 | **Deployment** | deployment | deploy-check, dev-start |
@@ -299,5 +329,5 @@ Claude will recommend the appropriate skills and commands based on your needs.
 ---
 
 **Last Updated**: 2025-11-15
-**Version**: 1.0.0
+**Version**: 1.1.0
 **Maintained By**: Claude Code AI Assistant

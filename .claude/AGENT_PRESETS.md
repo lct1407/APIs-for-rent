@@ -142,7 +142,37 @@ This document defines recommended agent configurations and workflows for common 
 6. Perform manual testing
 7. Document bugs and fixes
 
-### 6. Maintenance Agent
+### 6. UI/UX Designer Agent
+
+**Focus**: Beautiful, creative interfaces, user experience
+
+**Skills**:
+- ui-ux-design
+- frontend-testing
+
+**Commands**:
+- /ui-review
+- /generate-component
+- /design-tokens
+- /test-frontend
+
+**Typical Workflows**:
+
+**Creating new components**:
+1. Use **ui-ux-design** skill for design patterns
+2. Use `/generate-component` for beautiful implementations
+3. Test with `/test-frontend`
+4. Review with `/ui-review` for consistency
+
+**Redesigning existing UI**:
+1. Run `/ui-review` to audit current design
+2. Use `/design-tokens` to review design system
+3. Use **ui-ux-design** skill for modern patterns
+4. Implement improvements
+5. Test accessibility and responsiveness
+6. Run `/ui-review` again to verify
+
+### 7. Maintenance Agent
 
 **Focus**: Bug fixes, updates, refactoring
 
@@ -238,6 +268,11 @@ Expected output:
 - **Personality**: User-focused, design-conscious, accessibility-aware
 - **Communication**: Visual, includes UI/UX considerations
 - **Priorities**: 1) User experience, 2) Accessibility, 3) Performance
+
+### UI/UX Designer Agent
+- **Personality**: Creative, detail-oriented, empathetic to user needs
+- **Communication**: Visual examples, design patterns, aesthetic focus
+- **Priorities**: 1) Beauty & Delight, 2) Usability, 3) Accessibility
 
 ### DevOps Agent
 - **Personality**: Reliability-focused, automation-oriented, proactive
@@ -336,6 +371,9 @@ Help new developers get started:
 |------|-------------------|-------------------------|
 | Add new API endpoint | Backend Developer | api-testing, /test-backend |
 | Add new React component | Frontend Developer | frontend-testing, /test-frontend |
+| Design beautiful UI component | UI/UX Designer | ui-ux-design, /generate-component |
+| UI/UX audit and improvements | UI/UX Designer | /ui-review, ui-ux-design |
+| Design system updates | UI/UX Designer | /design-tokens, ui-ux-design |
 | Database schema change | Backend Developer | database-migration, /migrate |
 | Security vulnerability fix | DevOps + Backend | security-audit, /security-check |
 | Deploy to production | DevOps | deployment, /deploy-check |
@@ -344,7 +382,7 @@ Help new developers get started:
 | Code review | Any agent | /code-review |
 | Bug investigation | Maintenance | /quick-fix, relevant testing skill |
 | Performance optimization | Backend Developer | api-testing, database-migration |
-| UI/UX improvements | Frontend Developer | frontend-testing |
+| Accessibility improvements | UI/UX Designer | ui-ux-design, /ui-review |
 | Documentation update | Any agent | /api-docs |
 
 ## 💡 Pro Tips
@@ -397,7 +435,7 @@ Planned improvements:
 ---
 
 **Last Updated**: 2025-11-15
-**Version**: 1.0.0
+**Version**: 1.1.0
 **Maintained By**: Claude Code AI Assistant
 
 ## Quick Reference
@@ -408,15 +446,18 @@ Planned improvements:
 - `/test-frontend` - Test frontend
 - `/quick-fix` - Fix common issues
 - `/code-review` - Review code
+- `/ui-review` - Review UI/UX design
+- `/generate-component` - Generate beautiful components
 
 **Most Used Skills**:
 - `api-testing` - Backend testing
 - `database-migration` - Schema changes
+- `ui-ux-design` - Beautiful interfaces
 - `security-audit` - Security review
 - `deployment` - Production deployment
 
 **Most Common Workflow**:
 ```
-Feature → database-migration → api-testing → frontend-testing
-→ /test-backend → /test-frontend → /code-review → Deploy
+Feature → database-migration → api-testing → ui-ux-design → frontend-testing
+→ /test-backend → /test-frontend → /ui-review → /code-review → Deploy
 ```
