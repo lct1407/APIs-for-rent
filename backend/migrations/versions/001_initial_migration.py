@@ -21,17 +21,77 @@ def upgrade() -> None:
     Create all database tables
     """
 
-    # Create enum types
-    op.execute("CREATE TYPE userrole AS ENUM ('user', 'admin', 'super_admin')")
-    op.execute("CREATE TYPE userstatus AS ENUM ('active', 'inactive', 'suspended', 'deleted')")
-    op.execute("CREATE TYPE subscriptionplan AS ENUM ('free', 'basic', 'pro', 'enterprise')")
-    op.execute("CREATE TYPE billingcycle AS ENUM ('monthly', 'yearly')")
-    op.execute("CREATE TYPE subscriptionstatus AS ENUM ('active', 'cancelled', 'past_due', 'trialing')")
-    op.execute("CREATE TYPE paymentprovider AS ENUM ('stripe', 'paypal')")
-    op.execute("CREATE TYPE paymentstatus AS ENUM ('pending', 'completed', 'failed', 'refunded')")
-    op.execute("CREATE TYPE transactiontype AS ENUM ('purchase', 'usage', 'refund', 'bonus', 'subscription')")
-    op.execute("CREATE TYPE organizationrole AS ENUM ('owner', 'admin', 'member')")
-    op.execute("CREATE TYPE webhookstatus AS ENUM ('pending', 'success', 'failed')")
+    # Create enum types (using DO blocks to handle if type already exists)
+    op.execute("""
+        DO $$ BEGIN
+            CREATE TYPE userrole AS ENUM ('user', 'admin', 'super_admin');
+        EXCEPTION
+            WHEN duplicate_object THEN null;
+        END $$;
+    """)
+    op.execute("""
+        DO $$ BEGIN
+            CREATE TYPE userstatus AS ENUM ('active', 'inactive', 'suspended', 'deleted');
+        EXCEPTION
+            WHEN duplicate_object THEN null;
+        END $$;
+    """)
+    op.execute("""
+        DO $$ BEGIN
+            CREATE TYPE subscriptionplan AS ENUM ('free', 'basic', 'pro', 'enterprise');
+        EXCEPTION
+            WHEN duplicate_object THEN null;
+        END $$;
+    """)
+    op.execute("""
+        DO $$ BEGIN
+            CREATE TYPE billingcycle AS ENUM ('monthly', 'yearly');
+        EXCEPTION
+            WHEN duplicate_object THEN null;
+        END $$;
+    """)
+    op.execute("""
+        DO $$ BEGIN
+            CREATE TYPE subscriptionstatus AS ENUM ('active', 'cancelled', 'past_due', 'trialing');
+        EXCEPTION
+            WHEN duplicate_object THEN null;
+        END $$;
+    """)
+    op.execute("""
+        DO $$ BEGIN
+            CREATE TYPE paymentprovider AS ENUM ('stripe', 'paypal');
+        EXCEPTION
+            WHEN duplicate_object THEN null;
+        END $$;
+    """)
+    op.execute("""
+        DO $$ BEGIN
+            CREATE TYPE paymentstatus AS ENUM ('pending', 'completed', 'failed', 'refunded');
+        EXCEPTION
+            WHEN duplicate_object THEN null;
+        END $$;
+    """)
+    op.execute("""
+        DO $$ BEGIN
+            CREATE TYPE transactiontype AS ENUM ('purchase', 'usage', 'refund', 'bonus', 'subscription');
+        EXCEPTION
+            WHEN duplicate_object THEN null;
+        END $$;
+    """)
+    op.execute("""
+        DO $$ BEGIN
+            CREATE TYPE organizationrole AS ENUM ('owner', 'admin', 'member');
+        EXCEPTION
+            WHEN duplicate_object THEN null;
+        END $$;
+    """)
+    op.execute("""
+        DO $$ BEGIN
+            CREATE TYPE webhookstatus AS ENUM ('pending', 'success', 'failed');
+        EXCEPTION
+            WHEN duplicate_object THEN null;
+        END $$;
+    """)
 
     # Users table
     op.create_table(
@@ -45,9 +105,9 @@ def upgrade() -> None:
         sa.Column('company_name', sa.String(length=255), nullable=True),
         sa.Column('bio', sa.Text(), nullable=True),
         sa.Column('avatar_url', sa.String(length=500), nullable=True),
-        sa.Column('role', postgresql.ENUM('user', 'admin', 'super_admin', name='userrole'), nullable=False),
-        sa.Column('status', postgresql.ENUM('active', 'inactive', 'suspended', 'deleted', name='userstatus'), nullable=False),
-        sa.Column('plan', postgresql.ENUM('free', 'basic', 'pro', 'enterprise', name='subscriptionplan'), nullable=False),
+        sa.Column('role', postgresql.ENUM('user', 'admin', 'super_admin', name='userrole', create_type=False), nullable=False),
+        sa.Column('status', postgresql.ENUM('active', 'inactive', 'suspended', 'deleted', name='userstatus', create_type=False), nullable=False),
+        sa.Column('plan', postgresql.ENUM('free', 'basic', 'pro', 'enterprise', name='subscriptionplan', create_type=False), nullable=False),
         sa.Column('email_verified', sa.Boolean(), default=False, nullable=False),
         sa.Column('email_verified_at', sa.DateTime(timezone=True), nullable=True),
         sa.Column('two_factor_enabled', sa.Boolean(), default=False, nullable=False),
@@ -99,7 +159,7 @@ def upgrade() -> None:
         sa.Column('id', sa.BigInteger(), autoincrement=True, nullable=False),
         sa.Column('organization_id', sa.BigInteger(), nullable=False),
         sa.Column('user_id', sa.BigInteger(), nullable=False),
-        sa.Column('role', postgresql.ENUM('owner', 'admin', 'member', name='organizationrole'), nullable=False),
+        sa.Column('role', postgresql.ENUM('owner', 'admin', 'member', name='organizationrole', create_type=False), nullable=False),
         sa.Column('created_at', sa.DateTime(timezone=True), server_default=sa.text('now()'), nullable=False),
         sa.Column('updated_at', sa.DateTime(timezone=True), server_default=sa.text('now()'), nullable=False),
         sa.ForeignKeyConstraint(['organization_id'], ['organizations.id'], ondelete='CASCADE'),
@@ -116,7 +176,7 @@ def upgrade() -> None:
         sa.Column('id', sa.BigInteger(), autoincrement=True, nullable=False),
         sa.Column('organization_id', sa.BigInteger(), nullable=False),
         sa.Column('email', sa.String(length=255), nullable=False),
-        sa.Column('role', postgresql.ENUM('owner', 'admin', 'member', name='organizationrole'), nullable=False),
+        sa.Column('role', postgresql.ENUM('owner', 'admin', 'member', name='organizationrole', create_type=False), nullable=False),
         sa.Column('invited_by', sa.BigInteger(), nullable=False),
         sa.Column('token', sa.String(length=255), nullable=False),
         sa.Column('expires_at', sa.DateTime(timezone=True), nullable=False),
@@ -192,7 +252,7 @@ def upgrade() -> None:
         sa.Column('webhook_id', sa.BigInteger(), nullable=False),
         sa.Column('event_type', sa.String(length=100), nullable=False),
         sa.Column('payload', postgresql.JSONB(), nullable=False),
-        sa.Column('status', postgresql.ENUM('pending', 'success', 'failed', name='webhookstatus'), nullable=False),
+        sa.Column('status', postgresql.ENUM('pending', 'success', 'failed', name='webhookstatus', create_type=False), nullable=False),
         sa.Column('response_status_code', sa.Integer(), nullable=True),
         sa.Column('response_body', sa.Text(), nullable=True),
         sa.Column('error_message', sa.Text(), nullable=True),
@@ -213,9 +273,9 @@ def upgrade() -> None:
         sa.Column('id', sa.BigInteger(), autoincrement=True, nullable=False),
         sa.Column('user_id', sa.BigInteger(), nullable=False),
         sa.Column('organization_id', sa.BigInteger(), nullable=True),
-        sa.Column('plan', postgresql.ENUM('free', 'basic', 'pro', 'enterprise', name='subscriptionplan'), nullable=False),
-        sa.Column('status', postgresql.ENUM('active', 'cancelled', 'past_due', 'trialing', name='subscriptionstatus'), nullable=False),
-        sa.Column('billing_cycle', postgresql.ENUM('monthly', 'yearly', name='billingcycle'), nullable=False),
+        sa.Column('plan', postgresql.ENUM('free', 'basic', 'pro', 'enterprise', name='subscriptionplan', create_type=False), nullable=False),
+        sa.Column('status', postgresql.ENUM('active', 'cancelled', 'past_due', 'trialing', name='subscriptionstatus', create_type=False), nullable=False),
+        sa.Column('billing_cycle', postgresql.ENUM('monthly', 'yearly', name='billingcycle', create_type=False), nullable=False),
         sa.Column('current_period_start', sa.DateTime(timezone=True), nullable=False),
         sa.Column('current_period_end', sa.DateTime(timezone=True), nullable=False),
         sa.Column('cancel_at_period_end', sa.Boolean(), default=False, nullable=False),
@@ -241,8 +301,8 @@ def upgrade() -> None:
         sa.Column('subscription_id', sa.BigInteger(), nullable=True),
         sa.Column('amount', sa.Numeric(precision=10, scale=2), nullable=False),
         sa.Column('currency', sa.String(length=3), default='USD', nullable=False),
-        sa.Column('status', postgresql.ENUM('pending', 'completed', 'failed', 'refunded', name='paymentstatus'), nullable=False),
-        sa.Column('provider', postgresql.ENUM('stripe', 'paypal', name='paymentprovider'), nullable=False),
+        sa.Column('status', postgresql.ENUM('pending', 'completed', 'failed', 'refunded', name='paymentstatus', create_type=False), nullable=False),
+        sa.Column('provider', postgresql.ENUM('stripe', 'paypal', name='paymentprovider', create_type=False), nullable=False),
         sa.Column('provider_transaction_id', sa.String(length=255), nullable=True),
         sa.Column('payment_method', sa.String(length=100), nullable=True),
         sa.Column('description', sa.Text(), nullable=True),
@@ -285,7 +345,7 @@ def upgrade() -> None:
         sa.Column('id', sa.BigInteger(), autoincrement=True, nullable=False),
         sa.Column('user_id', sa.BigInteger(), nullable=False),
         sa.Column('amount', sa.Integer(), nullable=False),
-        sa.Column('transaction_type', postgresql.ENUM('purchase', 'usage', 'refund', 'bonus', 'subscription', name='transactiontype'), nullable=False),
+        sa.Column('transaction_type', postgresql.ENUM('purchase', 'usage', 'refund', 'bonus', 'subscription', name='transactiontype', create_type=False), nullable=False),
         sa.Column('description', sa.Text(), nullable=True),
         sa.Column('reference_id', sa.BigInteger(), nullable=True),
         sa.Column('reference_type', sa.String(length=50), nullable=True),

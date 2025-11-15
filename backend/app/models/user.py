@@ -52,9 +52,9 @@ class User(Base):
 
     # Limits and Quotas
     api_rate_limit = Column(Integer, default=1000, nullable=False)  # requests per hour
-    storage_limit = Column(Integer, default=1024, nullable=False)  # MB
+    # storage_limit = Column(Integer, default=1024, nullable=False)  # MB  # TODO: Add via migration
     max_api_keys = Column(Integer, default=5, nullable=False)
-    max_webhooks = Column(Integer, default=5, nullable=False)
+    # max_webhooks = Column(Integer, default=5, nullable=False)  # TODO: Add via migration
 
     # Credits
     credits = Column(Integer, default=0, nullable=False)
@@ -67,15 +67,15 @@ class User(Base):
     locked_until = Column(DateTime(timezone=True))
 
     # Settings
-    preferences = Column(JSON, default={}, nullable=False)
-    notification_settings = Column(JSON, default={
+    # preferences = Column(JSON, default={}, nullable=False)  # TODO: Add via migration or use notification_preferences
+    notification_preferences = Column(JSON, default={
         "email": True,
         "webhook": True,
         "in_app": True
-    }, nullable=False)
+    }, nullable=True)  # Match migration schema
 
-    # Metadata
-    user_metadata = Column(JSON, default={}, nullable=False)
+    # Metadata (using user_metadata property name to avoid SQLAlchemy reserved 'metadata' name)
+    user_metadata = Column('metadata', JSON, nullable=True)  # Maps to 'metadata' column in database
 
     # Relationships
     api_keys = relationship(

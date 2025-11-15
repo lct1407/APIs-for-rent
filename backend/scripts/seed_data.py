@@ -69,77 +69,81 @@ async def seed_users(db: AsyncSession):
             "username": "admin",
             "password": "Admin123!@#",
             "full_name": "System Administrator",
-            "role": UserRole.SUPER_ADMIN,
-            "status": UserStatus.ACTIVE,
-            
+            "role": UserRole.SUPER_ADMIN.value,
+            "status": UserStatus.ACTIVE.value,
+
             "credits": 100000,
             "email_verified": True,
             "phone_number": "+1234567890",
-            "company_name": "RentAPI Platform"
+            "company_name": "SidCorp Platform"
         },
         {
-            "email": "john@acme.com",
-            "username": "johndoe",
+            "email": "enterprise-user@sidcorp.co",
+            "username": "enterprise-user",
             "password": "User123!@#",
-            "full_name": "John Doe",
-            "role": UserRole.USER,
-            "status": UserStatus.ACTIVE,
-            
-            "credits": 5000,
-            "email_verified": True,
-            "phone_number": "+1234567891",
-            "company_name": "Acme Corporation",
-            "bio": "Software engineer building awesome APIs"
-        },
-        {
-            "email": "jane@startup.io",
-            "username": "janesmith",
-            "password": "User123!@#",
-            "full_name": "Jane Smith",
-            "role": UserRole.USER,
-            "status": UserStatus.ACTIVE,
-            
-            "credits": 1000,
-            "email_verified": True,
-            "phone_number": "+1234567892",
-            "company_name": "StartupIO",
-            "bio": "Product manager exploring API monetization"
-        },
-        {
-            "email": "bob@freelance.dev",
-            "username": "bobwilson",
-            "password": "User123!@#",
-            "full_name": "Bob Wilson",
-            "role": UserRole.USER,
-            "status": UserStatus.ACTIVE,
-            
-            "credits": 100,
-            "email_verified": False,
-            "company_name": "Freelance Developer"
-        },
-        {
-            "email": "alice@enterprise.com",
-            "username": "alicejohnson",
-            "password": "User123!@#",
-            "full_name": "Alice Johnson",
-            "role": UserRole.ADMIN,
-            "status": UserStatus.ACTIVE,
-            
+            "full_name": "Enterprise User",
+            "role": UserRole.USER.value,
+            "status": UserStatus.ACTIVE.value,
+
             "credits": 50000,
             "email_verified": True,
-            "phone_number": "+1234567893",
-            "company_name": "Enterprise Solutions Inc"
+            "phone_number": "+1234567891",
+            "company_name": "SidCorp Enterprise",
+            "bio": "Enterprise tier user with advanced features"
         },
         {
-            "email": "charlie@suspended.com",
-            "username": "charlie",
+            "email": "pro-user@sidcorp.co",
+            "username": "pro-user",
             "password": "User123!@#",
-            "full_name": "Charlie Brown",
-            "role": UserRole.USER,
-            "status": UserStatus.SUSPENDED,
-            
-            "credits": 0,
-            "email_verified": True
+            "full_name": "Pro User",
+            "role": UserRole.USER.value,
+            "status": UserStatus.ACTIVE.value,
+
+            "credits": 5000,
+            "email_verified": True,
+            "phone_number": "+1234567892",
+            "company_name": "SidCorp Pro",
+            "bio": "Pro tier user with enhanced capabilities"
+        },
+        {
+            "email": "basic-user@sidcorp.co",
+            "username": "basic-user",
+            "password": "User123!@#",
+            "full_name": "Basic User",
+            "role": UserRole.USER.value,
+            "status": UserStatus.ACTIVE.value,
+
+            "credits": 1000,
+            "email_verified": True,
+            "phone_number": "+1234567893",
+            "company_name": "SidCorp Basic",
+            "bio": "Basic tier user"
+        },
+        {
+            "email": "free-user@sidcorp.co",
+            "username": "free-user",
+            "password": "User123!@#",
+            "full_name": "Free User",
+            "role": UserRole.USER.value,
+            "status": UserStatus.ACTIVE.value,
+
+            "credits": 100,
+            "email_verified": True,
+            "phone_number": "+1234567894",
+            "company_name": "SidCorp Free"
+        },
+        {
+            "email": "admin-user@sidcorp.co",
+            "username": "admin-user",
+            "password": "User123!@#",
+            "full_name": "Admin User",
+            "role": UserRole.ADMIN.value,
+            "status": UserStatus.ACTIVE.value,
+
+            "credits": 25000,
+            "email_verified": True,
+            "phone_number": "+1234567895",
+            "company_name": "SidCorp Admin"
         }
     ]
 
@@ -177,22 +181,22 @@ async def seed_organizations(db: AsyncSession, users: list):
 
     orgs_data = [
         {
-            "name": "Acme Corporation",
-            "slug": "acme-corp",
-            "description": "Leading provider of business solutions",
-            "owner_user_id": users[1].id  # John
+            "name": "SidCorp Enterprise",
+            "slug": "sidcorp-enterprise",
+            "description": "Enterprise solutions and services",
+            "owner_user_id": users[1].id  # Enterprise User
         },
         {
-            "name": "StartupIO",
-            "slug": "startup-io",
-            "description": "Innovative startup building the future",
-            "owner_user_id": users[2].id  # Jane
+            "name": "SidCorp Pro",
+            "slug": "sidcorp-pro",
+            "description": "Professional tier services",
+            "owner_user_id": users[2].id  # Pro User
         },
         {
-            "name": "Enterprise Solutions",
-            "slug": "enterprise-solutions",
-            "description": "Enterprise-grade software solutions",
-            "owner_user_id": users[4].id  # Alice
+            "name": "SidCorp Admin Team",
+            "slug": "sidcorp-admin",
+            "description": "Administrative organization",
+            "owner_user_id": users[5].id  # Admin User
         }
     ]
 
@@ -208,7 +212,7 @@ async def seed_organizations(db: AsyncSession, users: list):
         member = OrganizationMember(
             organization_id=org.id,
             user_id=owner_id,
-            role=OrganizationRole.OWNER
+            role=OrganizationRole.OWNER.value
         )
         db.add(member)
 
@@ -308,32 +312,32 @@ async def seed_webhooks(db: AsyncSession, users: list, organizations: list):
 
     webhooks_data = [
         {
-            "user_id": users[1].id,  # John
+            "user_id": users[1].id,  # Enterprise User
             "organization_id": organizations[0].id,
-            "name": "Acme Production Webhook",
-            "url": "https://acme.com/webhooks/api-events",
+            "name": "SidCorp Enterprise Webhook",
+            "url": "https://enterprise.sidcorp.co/webhooks/api-events",
             "events": ["api_key.created", "api_key.deleted", "payment.succeeded"],
-            "description": "Acme production webhook",
+            "description": "Enterprise tier webhook for all API events",
             "secret": SecurityManager.generate_secret(32),
             "is_active": True
         },
         {
-            "user_id": users[2].id,  # Jane
+            "user_id": users[2].id,  # Pro User
             "organization_id": organizations[1].id,
-            "name": "Subscription Events Webhook",
-            "url": "https://startup.io/api/webhooks",
+            "name": "SidCorp Pro Webhook",
+            "url": "https://pro.sidcorp.co/api/webhooks",
             "events": ["subscription.created", "subscription.cancelled", "payment.failed"],
-            "description": "Subscription events webhook",
+            "description": "Pro tier subscription events webhook",
             "secret": SecurityManager.generate_secret(32),
             "is_active": True
         },
         {
-            "user_id": users[4].id,  # Alice
+            "user_id": users[5].id,  # Admin User
             "organization_id": organizations[2].id,
-            "name": "Enterprise All Events",
-            "url": "https://enterprise.com/webhooks/all",
+            "name": "SidCorp Admin Webhook",
+            "url": "https://admin.sidcorp.co/webhooks/all",
             "events": ["*"],
-            "description": "All events webhook",
+            "description": "Admin webhook for all system events",
             "secret": SecurityManager.generate_secret(32),
             "is_active": True
         }
@@ -361,34 +365,34 @@ async def seed_subscriptions(db: AsyncSession, users: list):
 
     subscriptions_data = [
         {
-            "user_id": users[1].id,  # John - Pro plan
-            "plan": SubscriptionPlan.PRO,
-            "status": SubscriptionStatus.ACTIVE,
+            "user_id": users[1].id,  # Enterprise User - Enterprise plan
+            "plan": SubscriptionPlan.ENTERPRISE.value,
+            "status": SubscriptionStatus.ACTIVE.value,
+            "billing_cycle": "yearly",
+            "price": Decimal("1999.99"),
+            "provider": PaymentProvider.STRIPE.value,
+            "current_period_start": datetime.utcnow() - timedelta(days=60),
+            "current_period_end": datetime.utcnow() + timedelta(days=305)
+        },
+        {
+            "user_id": users[2].id,  # Pro User - Pro plan
+            "plan": SubscriptionPlan.PRO.value,
+            "status": SubscriptionStatus.ACTIVE.value,
             "billing_cycle": "monthly",
             "price": Decimal("49.99"),
-            "provider": PaymentProvider.STRIPE,
+            "provider": PaymentProvider.STRIPE.value,
             "current_period_start": datetime.utcnow() - timedelta(days=10),
             "current_period_end": datetime.utcnow() + timedelta(days=20)
         },
         {
-            "user_id": users[2].id,  # Jane - Basic plan
-            "plan": SubscriptionPlan.BASIC,
-            "status": SubscriptionStatus.ACTIVE,
+            "user_id": users[3].id,  # Basic User - Basic plan
+            "plan": SubscriptionPlan.BASIC.value,
+            "status": SubscriptionStatus.ACTIVE.value,
             "billing_cycle": "yearly",
             "price": Decimal("199.99"),
-            "provider": PaymentProvider.PAYPAL,
+            "provider": PaymentProvider.PAYPAL.value,
             "current_period_start": datetime.utcnow() - timedelta(days=30),
             "current_period_end": datetime.utcnow() + timedelta(days=335)
-        },
-        {
-            "user_id": users[4].id,  # Alice - Enterprise plan
-            "plan": SubscriptionPlan.ENTERPRISE,
-            "status": SubscriptionStatus.ACTIVE,
-            "billing_cycle": "yearly",
-            "price": Decimal("1999.99"),
-            "provider": PaymentProvider.STRIPE,
-            "current_period_start": datetime.utcnow() - timedelta(days=60),
-            "current_period_end": datetime.utcnow() + timedelta(days=305)
         }
     ]
 
@@ -418,8 +422,8 @@ async def seed_payments(db: AsyncSession, users: list, subscriptions: list):
             "subscription_id": subscriptions[0].id,
             "amount": Decimal("49.99"),
             "currency": "USD",
-            "status": PaymentStatus.SUCCEEDED,
-            "provider": PaymentProvider.STRIPE,
+            "status": PaymentStatus.SUCCEEDED.value,
+            "provider": PaymentProvider.STRIPE.value,
             "provider_transaction_id": "pi_3Abc123Stripe",
             "payment_method": "card",
             "description": "Pro Plan - Monthly",
@@ -430,8 +434,8 @@ async def seed_payments(db: AsyncSession, users: list, subscriptions: list):
             "subscription_id": subscriptions[1].id,
             "amount": Decimal("199.99"),
             "currency": "USD",
-            "status": PaymentStatus.SUCCEEDED,
-            "provider": PaymentProvider.PAYPAL,
+            "status": PaymentStatus.SUCCEEDED.value,
+            "provider": PaymentProvider.PAYPAL.value,
             "provider_transaction_id": "PAYID-ABC123",
             "payment_method": "paypal",
             "description": "Basic Plan - Yearly",
@@ -442,8 +446,8 @@ async def seed_payments(db: AsyncSession, users: list, subscriptions: list):
             "subscription_id": subscriptions[2].id,
             "amount": Decimal("1999.99"),
             "currency": "USD",
-            "status": PaymentStatus.SUCCEEDED,
-            "provider": PaymentProvider.STRIPE,
+            "status": PaymentStatus.SUCCEEDED.value,
+            "provider": PaymentProvider.STRIPE.value,
             "provider_transaction_id": "pi_3Xyz789Stripe",
             "payment_method": "card",
             "description": "Enterprise Plan - Yearly",
@@ -453,8 +457,8 @@ async def seed_payments(db: AsyncSession, users: list, subscriptions: list):
             "user_id": users[1].id,
             "amount": Decimal("100.00"),
             "currency": "USD",
-            "status": PaymentStatus.SUCCEEDED,
-            "provider": PaymentProvider.STRIPE,
+            "status": PaymentStatus.SUCCEEDED.value,
+            "provider": PaymentProvider.STRIPE.value,
             "provider_transaction_id": "pi_credits123",
             "payment_method": "card",
             "description": "Credit Purchase - 1000 credits",
