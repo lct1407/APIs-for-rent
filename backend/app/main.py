@@ -18,6 +18,11 @@ from app.core.middleware import (
     SecurityHeadersMiddleware
 )
 from app.core.cache import RedisCache
+from app.core.openapi_config import (
+    get_openapi_tags,
+    get_openapi_metadata,
+    customize_openapi_schema
+)
 
 # Import API routers
 from app.api.v1 import auth, users, api_keys, webhooks, subscriptions, admin, websocket
@@ -85,60 +90,41 @@ async def lifespan(app: FastAPI):
     logger.info("Application shutdown complete")
 
 
-# Create FastAPI app
+# Get enhanced OpenAPI metadata
+openapi_metadata = get_openapi_metadata()
+
+# Create FastAPI app with enhanced OpenAPI configuration
 app = FastAPI(
-    title=settings.APP_NAME,
-    description="""
-    ## Enterprise SaaS API Management Platform
-
-    Complete API management solution with:
-
-    * **Authentication & Authorization**: JWT tokens, 2FA, RBAC
-    * **API Key Management**: Create, rotate, and manage API keys
-    * **Webhooks**: Real-time event notifications
-    * **Subscriptions & Billing**: Stripe and PayPal integration
-    * **Analytics**: Comprehensive usage tracking and reporting
-    * **Multi-tenancy**: Organization support
-    * **Admin Dashboard**: System monitoring and management
-
-    ### Features
-
-    - ✅ Incremental bigint IDs (not UUID)
-    - ✅ JWT authentication with refresh tokens
-    - ✅ Two-factor authentication (TOTP)
-    - ✅ Role-based access control (RBAC)
-    - ✅ Redis caching layer
-    - ✅ Rate limiting (per-user and per-API-key)
-    - ✅ API key management with scopes and IP whitelist
-    - ✅ Webhook delivery with retry logic
-    - ✅ Parallel payment processing (Stripe + PayPal)
-    - ✅ Real-time analytics
-    - ✅ Audit logging
-    - ✅ Email notifications
-
-    ### Security
-
-    - Password hashing with bcrypt
-    - Token blacklisting
-    - IP whitelisting
-    - CORS protection
-    - Security headers (HSTS, CSP, etc.)
-    - Input validation with Pydantic
-    - SQL injection protection
-
-    ### API Versioning
-
-    Current version: **v1**
-
-    All API endpoints are prefixed with `/api/v1/`
-    """,
-    version="1.0.0",
+    title=openapi_metadata["title"],
+    description=openapi_metadata["description"],
+    version=openapi_metadata["version"],
+    contact=openapi_metadata["contact"],
+    license_info=openapi_metadata["license_info"],
+    terms_of_service=openapi_metadata["termsOfService"],
+    openapi_tags=get_openapi_tags(),
     docs_url="/docs",
     redoc_url="/redoc",
     openapi_url="/openapi.json",
     lifespan=lifespan,
     debug=settings.DEBUG
 )
+
+
+# Customize OpenAPI schema
+def custom_openapi():
+    """
+    Generate and cache custom OpenAPI schema
+    """
+    if app.openapi_schema:
+        return app.openapi_schema
+
+    openapi_schema = app.openapi()
+    app.openapi_schema = customize_openapi_schema(openapi_schema)
+    return app.openapi_schema
+
+
+# Override the default OpenAPI schema generator
+app.openapi = custom_openapi
 
 
 # ============================================================================
