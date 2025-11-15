@@ -20,7 +20,7 @@ from app.core.middleware import (
 from app.core.cache import RedisCache
 
 # Import API routers
-from app.api.v1 import auth, users, api_keys, webhooks, subscriptions, admin
+from app.api.v1 import auth, users, api_keys, webhooks, subscriptions, admin, websocket
 
 
 # Configure logging
@@ -283,7 +283,8 @@ async def root():
             "api_keys": "/api/v1/api-keys",
             "webhooks": "/api/v1/webhooks",
             "subscriptions": "/api/v1/subscriptions",
-            "admin": "/api/v1/admin"
+            "admin": "/api/v1/admin",
+            "websocket": "/api/v1/ws"
         }
     }
 
@@ -297,6 +298,7 @@ app.include_router(api_keys.router, prefix=api_v1_prefix)
 app.include_router(webhooks.router, prefix=api_v1_prefix)
 app.include_router(subscriptions.router, prefix=api_v1_prefix)
 app.include_router(admin.router, prefix=api_v1_prefix)
+app.include_router(websocket.router, prefix=api_v1_prefix)
 
 
 # ============================================================================
