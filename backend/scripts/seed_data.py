@@ -65,13 +65,13 @@ async def seed_users(db: AsyncSession):
 
     users_data = [
         {
-            "email": "admin@example.com",
+            "email": "thanhlc@sidcorp.co",
             "username": "admin",
             "password": "Admin123!@#",
             "full_name": "System Administrator",
             "role": UserRole.SUPER_ADMIN,
             "status": UserStatus.ACTIVE,
-            "plan": SubscriptionPlan.ENTERPRISE,
+            
             "credits": 100000,
             "email_verified": True,
             "phone_number": "+1234567890",
@@ -84,7 +84,7 @@ async def seed_users(db: AsyncSession):
             "full_name": "John Doe",
             "role": UserRole.USER,
             "status": UserStatus.ACTIVE,
-            "plan": SubscriptionPlan.PRO,
+            
             "credits": 5000,
             "email_verified": True,
             "phone_number": "+1234567891",
@@ -98,7 +98,7 @@ async def seed_users(db: AsyncSession):
             "full_name": "Jane Smith",
             "role": UserRole.USER,
             "status": UserStatus.ACTIVE,
-            "plan": SubscriptionPlan.BASIC,
+            
             "credits": 1000,
             "email_verified": True,
             "phone_number": "+1234567892",
@@ -112,7 +112,7 @@ async def seed_users(db: AsyncSession):
             "full_name": "Bob Wilson",
             "role": UserRole.USER,
             "status": UserStatus.ACTIVE,
-            "plan": SubscriptionPlan.FREE,
+            
             "credits": 100,
             "email_verified": False,
             "company_name": "Freelance Developer"
@@ -124,7 +124,7 @@ async def seed_users(db: AsyncSession):
             "full_name": "Alice Johnson",
             "role": UserRole.ADMIN,
             "status": UserStatus.ACTIVE,
-            "plan": SubscriptionPlan.ENTERPRISE,
+            
             "credits": 50000,
             "email_verified": True,
             "phone_number": "+1234567893",
@@ -137,7 +137,7 @@ async def seed_users(db: AsyncSession):
             "full_name": "Charlie Brown",
             "role": UserRole.USER,
             "status": UserStatus.SUSPENDED,
-            "plan": SubscriptionPlan.BASIC,
+            
             "credits": 0,
             "email_verified": True
         }
@@ -556,8 +556,8 @@ async def main():
         async_session = AsyncSession(conn, expire_on_commit=False)
 
         try:
-            # Clear existing data
-            await clear_database(async_session)
+            # Clear existing data (skip for now - tables may not exist)
+            # await clear_database(async_session)
 
             # Seed data
             users = await seed_users(async_session)
